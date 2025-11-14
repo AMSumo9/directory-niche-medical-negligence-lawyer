@@ -94,16 +94,22 @@ const { count } = await supabase
                   {lawyer.city}, {lawyer.state_code}
                 </p>
                 {lawyer.short_description && (
-                  <p class="text-gray-700 mt-3">{lawyer.short_description}</p>
+                  <p class="text-gray-700 mt-3 mb-4">{lawyer.short_description}</p>
                 )}
-                <div class="mt-4 space-y-2">
+                <div class="mt-4 space-y-3">
+                  <a
+                    href={`${baseUrl}/${state}/${lawyer.city.toLowerCase().replace(/\s+/g, '-')}/${lawyer.slug}/`}
+                    class="block bg-gray-900 text-white text-center px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
+                  >
+                    View Full Profile
+                  </a>
                   {lawyer.show_phone_link && lawyer.phone && (
-                    <a href={`tel:${lawyer.phone}`} class="block text-blue-600 hover:text-blue-800 font-medium">
+                    <a href={`tel:${lawyer.phone}`} class="block text-blue-600 hover:text-blue-800 font-medium text-sm">
                       📞 {lawyer.phone}
                     </a>
                   )}
                   {lawyer.show_website_link && lawyer.website && (
-                    <a href={lawyer.website} target="_blank" rel="noopener noreferrer" class="block text-blue-600 hover:text-blue-800 font-medium">
+                    <a href={lawyer.website} target="_blank" rel="noopener noreferrer" class="block text-blue-600 hover:text-blue-800 font-medium text-sm">
                       🌐 Visit Website
                     </a>
                   )}
