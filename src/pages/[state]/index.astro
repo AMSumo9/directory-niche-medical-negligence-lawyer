@@ -126,7 +126,7 @@ const { count } = await supabase
           const citySlug = city.toLowerCase().replace(/\s+/g, '-');
           return (
             <a
-              href={`${baseUrl}${state}/${citySlug}/`}
+              href={`${baseUrl}/${state}/${citySlug}/`}
               class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition-all border border-gray-200 hover:border-blue-500 group"
             >
               <h3 class="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
