@@ -1,0 +1,181 @@
+{
+  "data_collection_template": {
+    "basic_information": {
+      "firm_name": "Smith Medical Negligence Lawyers",
+      "slug": "smith-medical-negligence-lawyers-sydney",
+      "state": "New South Wales",
+      "state_code": "NSW",
+      "city": "Sydney",
+      "address": "Level 15, 123 George Street, Sydney NSW 2000",
+      "phone": "+61 2 9123 4567",
+      "email": "contact@smithmedlaw.com.au",
+      "website": "https://www.smithmedlaw.com.au"
+    },
+    "contact_preferences": {
+      "show_phone_link": true,
+      "show_email_link": true,
+      "show_website_link": true
+    },
+    "descriptions": {
+      "short_description": "Leading Sydney medical negligence lawyers with 25+ years experience securing compensation for victims of medical malpractice.",
+      "description": "Full detailed description of the firm, their approach, why clients should choose them, their values, and commitment to medical negligence cases. Should be 200-400 words."
+    },
+    "firm_details": {
+      "years_experience": 25,
+      "founded_year": 1998,
+      "languages": ["English", "Mandarin", "Arabic"],
+      "awards": [
+        "Australian Law Awards - Personal Injury Firm of the Year 2023",
+        "Doyle's Guide - Recommended Medical Negligence Lawyer 2022-2024"
+      ],
+      "accreditations": [
+        "Law Society of NSW Accredited Specialist - Personal Injury",
+        "Australian Plaintiff Lawyers Association Member"
+      ]
+    },
+    "success_metrics": {
+      "total_cases_handled": 450,
+      "success_rate": 94.5,
+      "total_compensation_won": 8500000000,
+      "average_case_value": 35000000,
+      "largest_settlement": 275000000,
+      "note": "All monetary values in cents (AUD)"
+    },
+    "client_service": {
+      "free_consultation": true,
+      "no_win_no_fee": true,
+      "home_visits_available": true,
+      "telehealth_available": true,
+      "accepts_legal_aid": false,
+      "average_response_time": "Within 2 hours during business hours",
+      "business_hours": {
+        "monday": {"open": "09:00", "close": "17:30"},
+        "tuesday": {"open": "09:00", "close": "17:30"},
+        "wednesday": {"open": "09:00", "close": "17:30"},
+        "thursday": {"open": "09:00", "close": "17:30"},
+        "friday": {"open": "09:00", "close": "17:00"},
+        "saturday": {"open": "10:00", "close": "14:00"},
+        "sunday": "closed"
+      }
+    },
+    "specializations": [
+      "Surgical Errors",
+      "Misdiagnosis",
+      "Birth Injuries",
+      "Medication Errors"
+    ],
+    "service_areas": [
+      {
+        "state": "New South Wales",
+        "state_code": "NSW",
+        "city": "Sydney",
+        "postcode": "2000",
+        "is_primary_location": true
+      },
+      {
+        "state": "New South Wales",
+        "state_code": "NSW",
+        "city": "Parramatta",
+        "postcode": "2150",
+        "is_primary_location": false
+      },
+      {
+        "state": "New South Wales",
+        "state_code": "NSW",
+        "city": "Newcastle",
+        "postcode": "2300",
+        "is_primary_location": false
+      }
+    ],
+    "team_members": [
+      {
+        "full_name": "Dr. Sarah Smith",
+        "role": "Principal Lawyer & Founder",
+        "specialization": "Complex Medical Negligence",
+        "years_experience": 25,
+        "bio": "Former medical practitioner turned lawyer with unique insight into medical negligence cases.",
+        "display_order": 1
+      },
+      {
+        "full_name": "Michael Chen",
+        "role": "Senior Associate",
+        "specialization": "Birth Injuries",
+        "years_experience": 12,
+        "bio": "Specializes in birth injury cases with a compassionate, client-focused approach.",
+        "display_order": 2
+      }
+    ],
+    "qualifications": [
+      {
+        "qualification_type": "education",
+        "institution": "University of Sydney",
+        "qualification_name": "Bachelor of Laws (LLB) with Honours",
+        "year_obtained": 1996
+      },
+      {
+        "qualification_type": "education",
+        "institution": "University of Sydney",
+        "qualification_name": "Bachelor of Medicine (MBBS)",
+        "year_obtained": 1993
+      },
+      {
+        "qualification_type": "admission",
+        "institution": "Supreme Court of New South Wales",
+        "qualification_name": "Admitted as Solicitor",
+        "year_obtained": 1998
+      },
+      {
+        "qualification_type": "membership",
+        "institution": "Australian Plaintiff Lawyers Association",
+        "qualification_name": "Full Member",
+        "year_obtained": 1999
+      }
+    ],
+    "case_studies": [
+      {
+        "title": "Major Birth Injury Settlement - Cerebral Palsy Case",
+        "slug": "major-birth-injury-settlement-cerebral-palsy",
+        "case_type": "Birth Injuries",
+        "year": 2023,
+        "settlement_amount": 275000000,
+        "summary": "Successfully secured $2.75 million for a family whose child developed cerebral palsy due to delayed emergency caesarean section.",
+        "outcome": "Settlement achieved after expert medical evidence proved hospital's failure to monitor fetal distress led to permanent brain injury."
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Do I have to pay upfront fees?",
+        "answer": "No, we work on a no-win, no-fee basis for medical negligence cases. You only pay if we successfully secure compensation for you.",
+        "display_order": 1
+      },
+      {
+        "question": "How long do I have to make a medical negligence claim in NSW?",
+        "answer": "Generally, you have 3 years from when you became aware (or should have become aware) of the negligence. However, exceptions apply, so contact us immediately for a free assessment.",
+        "display_order": 2
+      },
+      {
+        "question": "What types of medical negligence cases do you handle?",
+        "answer": "We handle all types of medical negligence including surgical errors, misdiagnosis, delayed diagnosis, birth injuries, medication errors, hospital negligence, and nursing home abuse.",
+        "display_order": 3
+      }
+    ],
+    "media": {
+      "profile_image_url": "https://example.com/images/firm-logo.jpg",
+      "office_images_urls": [
+        "https://example.com/images/office-reception.jpg",
+        "https://example.com/images/office-meeting-room.jpg",
+        "https://example.com/images/office-exterior.jpg"
+      ]
+    },
+    "seo": {
+      "meta_title": "Medical Negligence Lawyers Sydney | No Win No Fee | Smith Med Law",
+      "meta_description": "Expert medical negligence lawyers in Sydney. 25+ years experience, 94% success rate. Free consultation. No win, no fee. Call 02 9123 4567."
+    },
+    "listing_type": {
+      "subscription_tier": "premium",
+      "is_featured": true,
+      "featured_priority": 10,
+      "is_published": true
+    }
+  }
+}
