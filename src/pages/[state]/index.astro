@@ -1,0 +1,170 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { supabase } from '../../lib/supabase';
+
+const baseUrl = import.meta.env.BASE_URL || '/';
+
+export async function getStaticPaths() {
+  const { data } = await supabase
+    .from('lawyers')
+    .select('state, state_code')
+    .eq('is_published', true);
+
+  if (!data) return [];
+
+  const states = Array.from(
+    new Map(data.map(s => [s.state_code, s])).values()
+  );
+
+  return states.map(s => ({
+    params: { state: s.state_code.toLowerCase() },
+    props: { stateName: s.state, stateCode: s.state_code }
+  }));
+}
+
+const { state } = Astro.params;
+const { stateName, stateCode } = Astro.props;
+
+// Fetch cities in this state
+const { data: citiesData } = await supabase
+  .from('lawyers')
+  .select('city')
+  .eq('state_code', stateCode)
+  .eq('is_published', true);
+
+const uniqueCities = [...new Set(citiesData?.map(c => c.city) || [])].sort();
+
+// Fetch featured lawyers in this state
+const { data: featuredLawyers } = await supabase
+  .from('lawyers')
+  .select('*')
+  .eq('state_code', stateCode)
+  .eq('is_featured', true)
+  .eq('is_published', true)
+  .order('featured_priority', { ascending: false })
+  .limit(3);
+
+// Get count of lawyers in this state
+const { count } = await supabase
+  .from('lawyers')
+  .select('*', { count: 'exact', head: true })
+  .eq('state_code', stateCode)
+  .eq('is_published', true);
+---
+
+<BaseLayout
+  title={`Medical Negligence Lawyers ${stateName} - Find Local Legal Help`}
+  description={`Find experienced medical negligence lawyers in ${stateName}. Browse ${count || 0} lawyers across ${uniqueCities.length} cities. Connect with local legal professionals.`}
+>
+  <!-- Hero Section -->
+  <section class="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-16">
+    <div class="container mx-auto px-4 max-w-6xl">
+      <nav class="text-sm mb-4">
+        <a href={baseUrl} class="hover:text-blue-200">Home</a>
+        <span class="mx-2">/</span>
+        <span>{stateName}</span>
+      </nav>
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">
+        Medical Negligence Lawyers in {stateName}
+      </h1>
+      <p class="text-xl text-blue-100">
+        {count || 0} lawyers across {uniqueCities.length} {uniqueCities.length === 1 ? 'city' : 'cities'}
+      </p>
+    </div>
+  </section>
+
+  <!-- Featured Lawyers in State -->
+  {featuredLawyers && featuredLawyers.length > 0 && (
+    <section class="py-12 bg-white">
+      <div class="container mx-auto px-4 max-w-6xl">
+        <h2 class="text-3xl font-bold text-gray-900 mb-8">Featured Lawyers in {stateName}</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {featuredLawyers.map((lawyer) => (
+            <article class="bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow border border-gray-200">
+              <div class="bg-yellow-400 px-4 py-2 rounded-t-lg">
+                <span class="text-yellow-900 font-bold text-sm">⭐ FEATURED</span>
+              </div>
+              <div class="p-6">
+                <h3 class="text-xl font-bold text-gray-900 mb-2">{lawyer.firm_name}</h3>
+                <p class="text-gray-600 mb-2">
+                  <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  </svg>
+                  {lawyer.city}, {lawyer.state_code}
+                </p>
+                {lawyer.short_description && (
+                  <p class="text-gray-700 mt-3">{lawyer.short_description}</p>
+                )}
+                <div class="mt-4 space-y-2">
+                  {lawyer.show_phone_link && lawyer.phone && (
+                    <a href={`tel:${lawyer.phone}`} class="block text-blue-600 hover:text-blue-800 font-medium">
+                      📞 {lawyer.phone}
+                    </a>
+                  )}
+                  {lawyer.show_website_link && lawyer.website && (
+                    <a href={lawyer.website} target="_blank" rel="noopener noreferrer" class="block text-blue-600 hover:text-blue-800 font-medium">
+                      🌐 Visit Website
+                    </a>
+                  )}
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Cities Grid -->
+  <section class="py-12 bg-gray-50">
+    <div class="container mx-auto px-4 max-w-6xl">
+      <h2 class="text-3xl font-bold text-gray-900 mb-8">Browse by City</h2>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {uniqueCities.map(city => {
+          const citySlug = city.toLowerCase().replace(/\s+/g, '-');
+          return (
+            <a
+              href={`${baseUrl}${state}/${citySlug}`}
+              class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition-all border border-gray-200 hover:border-blue-500 group"
+            >
+              <h3 class="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                {city}
+              </h3>
+              <p class="text-sm text-gray-500 mt-1">View Lawyers</p>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- Info Section -->
+  <section class="py-12 bg-white">
+    <div class="container mx-auto px-4 max-w-4xl">
+      <h2 class="text-3xl font-bold text-gray-900 mb-6">Medical Negligence Lawyers in {stateName}</h2>
+      <div class="prose prose-lg max-w-none text-gray-700">
+        <p class="mb-4">
+          If you or a loved one has suffered due to medical negligence in {stateName}, it's important to seek legal advice from an experienced medical malpractice lawyer. Our directory lists qualified lawyers across {stateName} who specialize in handling medical negligence claims.
+        </p>
+        <p class="mb-4">
+          Medical negligence can take many forms, including surgical errors, misdiagnosis, medication errors, birth injuries, and hospital negligence. The lawyers in our directory have experience handling these complex cases and can help you understand your rights and options.
+        </p>
+        <h3 class="text-2xl font-bold mt-8 mb-4">Common Types of Medical Negligence Cases</h3>
+        <ul class="list-disc pl-6 space-y-2 mb-4">
+          <li>Surgical errors and post-operative complications</li>
+          <li>Misdiagnosis or delayed diagnosis</li>
+          <li>Birth injuries and obstetric negligence</li>
+          <li>Medication errors and prescription mistakes</li>
+          <li>Hospital-acquired infections</li>
+          <li>Anesthesia errors</li>
+          <li>Emergency room negligence</li>
+        </ul>
+        <p>
+          Browse our directory to find a qualified medical negligence lawyer in your area of {stateName}.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

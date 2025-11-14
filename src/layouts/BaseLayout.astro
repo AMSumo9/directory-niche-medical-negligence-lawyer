@@ -1,0 +1,73 @@
+---
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const baseUrl = import.meta.env.BASE_URL || '/';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href={`${baseUrl}favicon.svg`} />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+  </head>
+  <body class="min-h-screen bg-gray-50 flex flex-col">
+    <header class="bg-blue-900 text-white shadow-lg">
+      <div class="container mx-auto px-4 py-6">
+        <nav class="flex items-center justify-between">
+          <a href={baseUrl} class="text-2xl font-bold hover:text-blue-200 transition-colors">
+            Medical Negligence Lawyers
+          </a>
+          <div class="flex gap-6">
+            <a href={baseUrl} class="hover:text-blue-200 transition-colors">Home</a>
+            <a href={`${baseUrl}about`} class="hover:text-blue-200 transition-colors">About</a>
+            <a href={`${baseUrl}contact`} class="hover:text-blue-200 transition-colors">Contact</a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <main class="flex-grow">
+      <slot />
+    </main>
+
+    <footer class="bg-gray-800 text-white py-12 mt-16">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
+            <h3 class="text-xl font-bold mb-4">Medical Negligence Lawyers</h3>
+            <p class="text-gray-300">
+              Find experienced medical negligence lawyers across Australia.
+              Connect with qualified professionals to help with your case.
+            </p>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+            <ul class="space-y-2">
+              <li><a href={baseUrl} class="text-gray-300 hover:text-white transition-colors">Home</a></li>
+              <li><a href={`${baseUrl}about`} class="text-gray-300 hover:text-white transition-colors">About</a></li>
+              <li><a href={`${baseUrl}contact`} class="text-gray-300 hover:text-white transition-colors">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold mb-4">Legal</h3>
+            <ul class="space-y-2">
+              <li><a href={`${baseUrl}privacy`} class="text-gray-300 hover:text-white transition-colors">Privacy Policy</a></li>
+              <li><a href={`${baseUrl}terms`} class="text-gray-300 hover:text-white transition-colors">Terms of Service</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-300">
+          <p>&copy; {new Date().getFullYear()} Medical Negligence Lawyers Directory. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
