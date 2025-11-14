@@ -104,11 +104,17 @@ const freeLawyers = lawyers?.filter(l => !l.is_featured && l.subscription_tier =
                   </p>
                 )}
 
-                {lawyer.description && (
-                  <p class="text-gray-700 mt-4 mb-4 leading-relaxed">{lawyer.description}</p>
+                {lawyer.short_description && (
+                  <p class="text-gray-700 mt-4 mb-4">{lawyer.short_description}</p>
                 )}
 
                 <div class="mt-6 space-y-3">
+                  <a
+                    href={`${baseUrl}/${state}/${city}/${lawyer.slug}/`}
+                    class="block bg-gray-900 text-white text-center px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
+                  >
+                    View Full Profile
+                  </a>
                   {lawyer.show_phone_link && lawyer.phone && (
                     <a
                       href={`tel:${lawyer.phone}`}
@@ -179,10 +185,17 @@ const freeLawyers = lawyers?.filter(l => !l.is_featured && l.subscription_tier =
                 )}
 
                 <div class="mt-4 space-y-2">
+                  <a
+                    href={`${baseUrl}/${state}/${city}/${lawyer.slug}/`}
+                    class="block bg-blue-600 text-white text-center px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                  >
+                    View Profile
+                  </a>
+
                   {lawyer.show_phone_link && lawyer.phone && (
                     <a
                       href={`tel:${lawyer.phone}`}
-                      class="block text-blue-600 hover:text-blue-800 font-medium"
+                      class="block text-blue-600 hover:text-blue-800 font-medium text-sm"
                     >
                       📞 {lawyer.phone}
                     </a>
@@ -191,7 +204,7 @@ const freeLawyers = lawyers?.filter(l => !l.is_featured && l.subscription_tier =
                   {lawyer.show_email_link && lawyer.email && (
                     <a
                       href={`mailto:${lawyer.email}`}
-                      class="block text-blue-600 hover:text-blue-800 font-medium"
+                      class="block text-blue-600 hover:text-blue-800 font-medium text-sm"
                     >
                       ✉️ {lawyer.email}
                     </a>
@@ -202,7 +215,7 @@ const freeLawyers = lawyers?.filter(l => !l.is_featured && l.subscription_tier =
                       href={lawyer.website}
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="block text-blue-600 hover:text-blue-800 font-medium"
+                      class="block text-blue-600 hover:text-blue-800 font-medium text-sm"
                     >
                       🌐 Visit Website
                     </a>
@@ -232,7 +245,16 @@ const freeLawyers = lawyers?.filter(l => !l.is_featured && l.subscription_tier =
                   <p class="text-gray-700 text-sm mt-2 mb-3">{lawyer.short_description}</p>
                 )}
 
-                <div class="mt-3 space-y-1 text-sm">
+                <div class="mt-4 space-y-2">
+                  <a
+                    href={`${baseUrl}/${state}/${city}/${lawyer.slug}/`}
+                    class="block bg-gray-700 text-white text-center px-4 py-2 rounded-lg font-semibold hover:bg-gray-600 transition-colors text-sm"
+                  >
+                    View Profile
+                  </a>
+                </div>
+
+                <div class="mt-3 space-y-1 text-xs">
                   {lawyer.show_phone_link && lawyer.phone && (
                     <p class="text-gray-600">📞 {lawyer.phone}</p>
                   )}
