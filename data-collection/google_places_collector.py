@@ -1,6 +1,7 @@
 """
-Google Places API Data Collector
+Google Places API (New) Data Collector
 Collects business information, ratings, and reviews for medical negligence lawyers
+Uses the NEW Places API v1
 """
 
 import requests
@@ -16,8 +17,7 @@ logger = logging.getLogger(__name__)
 
 class GooglePlacesCollector:
     """
-    Collect lawyer data using Google Places API
-    More reliable than web scraping
+    Collect lawyer data using NEW Google Places API v1
     """
 
     def __init__(self, api_key: str):
@@ -25,10 +25,11 @@ class GooglePlacesCollector:
         Initialize with Google Places API key
 
         Get API key from: https://console.cloud.google.com/
-        Enable: Places API, Maps JavaScript API
+        Enable: Places API (New)
         """
         self.api_key = api_key
-        self.base_url = 'https://maps.googleapis.com/maps/api/place'
+        self.base_url = 'https://places.googleapis.com/v1'
+        self.geocoding_url = 'https://maps.googleapis.com/maps/api/geocode/json'
 
     def search_lawyers_in_city(
         self,
@@ -38,7 +39,7 @@ class GooglePlacesCollector:
         radius: int = 50000  # 50km radius
     ) -> List[Dict]:
         """
-        Search for lawyers in a specific city using Places API
+        Search for lawyers in a specific city using NEW Places API
 
         Args:
             city: City name (e.g., 'Sydney')
@@ -49,7 +50,7 @@ class GooglePlacesCollector:
         Returns:
             List of lawyer business data
         """
-        # First, get city coordinates
+        # Get city coordinates using geocoding
         city_location = self._geocode_city(f"{city}, {state_code}, Australia")
         if not city_location:
             logger.error(f"Could not geocode {city}, {state_code}")
@@ -57,28 +58,21 @@ class GooglePlacesCollector:
 
         lat, lng = city_location
 
-        # Search for lawyers near this location
-        lawyers = self._text_search(
-            query=f"{query} in {city} {state_code}",
-            location=f"{lat},{lng}",
+        # Search for lawyers using new Places API
+        lawyers = self._search_text(
+            query=f"{query} {city} {state_code}",
+            location={'latitude': lat, 'longitude': lng},
             radius=radius
         )
 
-        # Enrich each lawyer with detailed information
-        enriched_lawyers = []
-        for lawyer in lawyers:
-            place_id = lawyer.get('place_id')
-            if place_id:
-                details = self._get_place_details(place_id)
-                if details:
-                    # Merge search result with details
-                    enriched_lawyer = self._merge_lawyer_data(lawyer, details, state_code)
-                    enriched_lawyers.append(enriched_lawyer)
+        # Format the data
+        formatted_lawyers = []
+        for place in lawyers:
+            lawyer_data = self._format_lawyer_data(place, state_code, city)
+            if lawyer_data:
+                formatted_lawyers.append(lawyer_data)
 
-                # Rate limiting
-                time.sleep(0.5)
-
-        return enriched_lawyers
+        return formatted_lawyers
 
     def search_lawyers_bulk(self, cities_states: List[tuple]) -> List[Dict]:
         """
@@ -108,18 +102,17 @@ class GooglePlacesCollector:
 
     def _geocode_city(self, address: str) -> Optional[tuple]:
         """
-        Get lat/lng coordinates for a city
+        Get lat/lng coordinates for a city using Geocoding API
 
         Returns: (lat, lng) tuple or None
         """
-        url = f"https://maps.googleapis.com/maps/api/geocode/json"
         params = {
             'address': address,
             'key': self.api_key
         }
 
         try:
-            response = requests.get(url, params=params, timeout=10)
+            response = requests.get(self.geocoding_url, params=params, timeout=10)
             response.raise_for_status()
             data = response.json()
 
@@ -132,190 +125,140 @@ class GooglePlacesCollector:
 
         return None
 
-    def _text_search(
+    def _search_text(
         self,
         query: str,
-        location: str,
+        location: Dict[str, float],
         radius: int
     ) -> List[Dict]:
         """
-        Perform text search using Places API
+        Perform text search using NEW Places API
 
-        Returns list of basic place information
+        Returns list of place dictionaries
         """
-        url = f"{self.base_url}/textsearch/json"
-        params = {
-            'query': query,
-            'location': location,
-            'radius': radius,
-            'key': self.api_key,
-            'type': 'lawyer'  # Filter to lawyer businesses
+        url = f"{self.base_url}/places:searchText"
+
+        headers = {
+            'Content-Type': 'application/json',
+            'X-Goog-Api-Key': self.api_key,
+            'X-Goog-FieldMask': ','.join([
+                'places.id',
+                'places.displayName',
+                'places.formattedAddress',
+                'places.nationalPhoneNumber',
+                'places.internationalPhoneNumber',
+                'places.websiteUri',
+                'places.rating',
+                'places.userRatingCount',
+                'places.regularOpeningHours',
+                'places.location',
+                'places.types',
+                'places.businessStatus',
+                'places.googleMapsUri'
+            ])
+        }
+
+        payload = {
+            'textQuery': query,
+            'locationBias': {
+                'circle': {
+                    'center': location,
+                    'radius': radius
+                }
+            },
+            'maxResultCount': 20,  # Max allowed by API
+            'languageCode': 'en'
         }
 
         all_results = []
 
         try:
-            while True:
-                response = requests.get(url, params=params, timeout=10)
-                response.raise_for_status()
-                data = response.json()
+            response = requests.post(url, headers=headers, json=payload, timeout=15)
+            response.raise_for_status()
+            data = response.json()
 
-                if data['status'] in ['OK', 'ZERO_RESULTS']:
-                    all_results.extend(data.get('results', []))
-
-                    # Check for next page
-                    next_page_token = data.get('next_page_token')
-                    if next_page_token:
-                        # Wait a bit before fetching next page
-                        time.sleep(2.0)
-                        params = {
-                            'pagetoken': next_page_token,
-                            'key': self.api_key
-                        }
-                    else:
-                        break
-                else:
-                    logger.error(f"Places API error: {data['status']}")
-                    break
+            if 'places' in data:
+                all_results.extend(data['places'])
 
         except Exception as e:
             logger.error(f"Text search error: {e}")
 
         return all_results
 
-    def _get_place_details(self, place_id: str) -> Optional[Dict]:
+    def _format_lawyer_data(self, place: Dict, state_code: str, city: str) -> Optional[Dict]:
         """
-        Get detailed information about a place
-
-        Returns detailed place data including reviews, hours, etc.
+        Format place data into our lawyer schema
         """
-        url = f"{self.base_url}/details/json"
-        params = {
-            'place_id': place_id,
-            'key': self.api_key,
-            'fields': ','.join([
-                'name',
-                'formatted_address',
-                'formatted_phone_number',
-                'international_phone_number',
-                'website',
-                'rating',
-                'user_ratings_total',
-                'reviews',
-                'opening_hours',
-                'geometry',
-                'types',
-                'business_status',
-                'url'  # Google Maps URL
-            ])
-        }
-
         try:
-            response = requests.get(url, params=params, timeout=10)
-            response.raise_for_status()
-            data = response.json()
+            # Parse address
+            address_full = place.get('formattedAddress', '')
+            address_parts = self._parse_address(address_full)
 
-            if data['status'] == 'OK':
-                return data['result']
-            else:
-                logger.error(f"Place details error: {data['status']}")
+            # Extract phone
+            phone = (
+                place.get('internationalPhoneNumber') or
+                place.get('nationalPhoneNumber') or
+                ''
+            )
+
+            # Get opening hours
+            opening_hours = place.get('regularOpeningHours', {})
+            business_hours = self._parse_business_hours(opening_hours)
+
+            # Rating data
+            rating = place.get('rating', 0.0)
+            review_count = place.get('userRatingCount', 0)
+
+            lawyer_data = {
+                # Basic information
+                'firm_name': place.get('displayName', {}).get('text', ''),
+                'state': address_parts.get('state', ''),
+                'state_code': state_code,
+                'city': city,
+                'address': address_full,
+                'phone': self._clean_phone(phone),
+                'website': place.get('websiteUri', ''),
+
+                # Default contact preferences
+                'show_phone_link': True,
+                'show_email_link': False,
+                'show_website_link': True,
+
+                # Google data
+                'google_place_id': place.get('id', ''),
+                'google_rating': rating,
+                'google_review_count': review_count,
+                'google_maps_url': place.get('googleMapsUri', ''),
+
+                # Business hours
+                'business_hours': business_hours,
+
+                # External data
+                'external_data': {
+                    'source': 'google_places_new_api',
+                    'collected_at': datetime.now().isoformat(),
+                    'business_status': place.get('businessStatus', ''),
+                    'types': place.get('types', []),
+                    'location': place.get('location', {})
+                },
+
+                # Defaults
+                'is_published': False,
+                'verification_status': 'unverified',
+                'subscription_tier': 'free',
+                'free_consultation': None,
+                'no_win_no_fee': None,
+            }
+
+            return lawyer_data
 
         except Exception as e:
-            logger.error(f"Error getting place details for {place_id}: {e}")
-
-        return None
-
-    def _merge_lawyer_data(
-        self,
-        search_result: Dict,
-        details: Dict,
-        state_code: str
-    ) -> Dict:
-        """
-        Merge search result with detailed data into our schema format
-        """
-        # Parse address
-        address_components = self._parse_address(
-            details.get('formatted_address', '')
-        )
-
-        # Extract phone
-        phone = (
-            details.get('international_phone_number') or
-            details.get('formatted_phone_number') or
-            ''
-        )
-
-        # Get reviews data (but don't copy review text - just stats)
-        reviews = details.get('reviews', [])
-        review_count = details.get('user_ratings_total', 0)
-        rating = details.get('rating', 0.0)
-
-        # Parse business hours
-        hours = details.get('opening_hours', {})
-        business_hours = self._parse_business_hours(hours)
-
-        lawyer_data = {
-            # Basic information
-            'firm_name': details.get('name', search_result.get('name', '')),
-            'state': address_components.get('state', ''),
-            'state_code': state_code,
-            'city': address_components.get('city', ''),
-            'address': details.get('formatted_address', ''),
-            'phone': self._clean_phone(phone),
-            'website': details.get('website', ''),
-
-            # Default contact preferences
-            'show_phone_link': True,
-            'show_email_link': False,  # Usually not in Google Places
-            'show_website_link': True,
-
-            # Google data (for reference, not public display without verification)
-            'google_place_id': search_result.get('place_id', ''),
-            'google_rating': rating,
-            'google_review_count': review_count,
-            'google_maps_url': details.get('url', ''),
-
-            # Business hours
-            'business_hours': business_hours,
-
-            # External data (store for later reference)
-            'external_data': {
-                'source': 'google_places',
-                'collected_at': datetime.now().isoformat(),
-                'business_status': details.get('business_status', ''),
-                'types': details.get('types', []),
-                'geometry': details.get('geometry', {}),
-                'reviews_sample': [
-                    {
-                        'rating': review.get('rating'),
-                        'time': review.get('time'),
-                        'author_name': review.get('author_name'),
-                        # NOTE: We store review text for reference only
-                        # Lawyer must approve before displaying publicly
-                        'text': review.get('text', '')[:200] + '...'  # Truncate
-                    }
-                    for review in reviews[:5]  # Store up to 5 reviews
-                ]
-            },
-
-            # Set default values
-            'is_published': False,  # Don't publish until verified
-            'verification_status': 'unverified',
-            'subscription_tier': 'free',
-
-            # Flags to set after verification
-            'free_consultation': None,  # Unknown until verified
-            'no_win_no_fee': None,  # Unknown until verified
-        }
-
-        return lawyer_data
+            logger.error(f"Error formatting lawyer data: {e}")
+            return None
 
     def _parse_address(self, formatted_address: str) -> Dict:
         """
         Parse formatted address into components
-
-        Example: "Level 15/123 George St, Sydney NSW 2000, Australia"
         """
         components = {
             'street': '',
@@ -337,21 +280,14 @@ class GooglePlacesCollector:
             # Second to last usually has state and postcode
             if len(parts) >= 2:
                 state_postcode = parts[-2].strip()
-                # Pattern: "NSW 2000" or "VIC 3000"
                 state_parts = state_postcode.split()
                 if len(state_parts) >= 2:
                     components['state'] = state_parts[0]
                     components['postcode'] = state_parts[1]
-                elif len(state_parts) == 1:
-                    components['state'] = state_parts[0]
 
             # Third to last is usually city
             if len(parts) >= 3:
                 components['city'] = parts[-3].strip()
-
-            # Everything before is street
-            if len(parts) >= 4:
-                components['street'] = ', '.join(parts[:-3])
 
         return components
 
@@ -362,27 +298,18 @@ class GooglePlacesCollector:
         if not hours_data:
             return None
 
-        weekday_text = hours_data.get('weekday_text', [])
-        if not weekday_text:
+        weekday_descriptions = hours_data.get('weekdayDescriptions', [])
+        if not weekday_descriptions:
             return None
-
-        # Parse weekday_text which looks like:
-        # ["Monday: 9:00 AM – 5:00 PM", "Tuesday: 9:00 AM – 5:00 PM", ...]
 
         hours = {}
         days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
-        for text in weekday_text:
+        for desc in weekday_descriptions:
             for day in days:
-                if text.lower().startswith(day):
-                    # Extract hours part
-                    hours_part = text.split(':', 1)[1].strip()
-
-                    if 'closed' in hours_part.lower():
-                        hours[day] = 'closed'
-                    else:
-                        # Try to parse "9:00 AM – 5:00 PM" format
-                        hours[day] = hours_part
+                if desc.lower().startswith(day):
+                    hours_part = desc.split(':', 1)[1].strip() if ':' in desc else 'closed'
+                    hours[day] = hours_part
 
         return hours if hours else None
 
@@ -391,7 +318,6 @@ class GooglePlacesCollector:
         if not phone:
             return ''
 
-        # Remove formatting but keep the + if international
         import re
         cleaned = re.sub(r'[^\d+]', '', phone)
 
@@ -426,7 +352,7 @@ if __name__ == "__main__":
         print("\nTo get an API key:")
         print("1. Go to https://console.cloud.google.com/")
         print("2. Create a new project")
-        print("3. Enable 'Places API' and 'Geocoding API'")
+        print("3. Enable 'Places API (New)' and 'Geocoding API'")
         print("4. Create credentials (API key)")
         print("5. Set environment variable: export GOOGLE_PLACES_API_KEY='your-key'")
         exit(1)
@@ -449,7 +375,7 @@ if __name__ == "__main__":
     ]
 
     # Collect data
-    print("Starting data collection from Google Places...")
+    print("Starting data collection from Google Places (NEW API)...")
     print(f"Searching {len(australian_cities)} cities")
     print("This may take a while due to API rate limiting...\n")
 

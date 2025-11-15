@@ -33,6 +33,7 @@ __pycache__/
 # Data collection outputs
 data-collection/collected_data/
 data-collection/*.json
+data-collection/*.log
 
 # Temporary files
 run_migration.py
