@@ -37,3 +37,5 @@ data-collection/*.log
 
 # Temporary files
 run_migration.py
+# Import data (large files)
+lawyers_final_IMPORT.json
