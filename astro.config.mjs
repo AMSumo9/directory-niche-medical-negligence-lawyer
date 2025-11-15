@@ -13,7 +13,7 @@ export default defineConfig({
     ? 'https://amsumo9.github.io'
     : 'http://localhost:4321',
   base: isGitHubPages
-    ? '/medical-negligence-lawyers-directory'
+    ? '/directory-niche-medical-negligence-lawyer'
     : '/',
   integrations: [tailwind(), sitemap()],
   output: 'static',
