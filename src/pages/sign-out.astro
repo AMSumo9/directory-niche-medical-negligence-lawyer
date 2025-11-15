@@ -19,11 +19,14 @@ const baseUrl = import.meta.env.BASE_URL || '/';
       <h1 class="text-3xl font-bold text-gray-900 mb-4">Sign Out</h1>
       <p class="text-gray-600 mb-8">Are you sure you want to sign out of your account?</p>
 
+      <!-- Message Display -->
+      <div id="message" class="hidden mb-4 p-4 rounded-lg"></div>
+
       <div class="space-y-3">
         <button
           type="button"
-          class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-          onclick="window.location.href = '${baseUrl}'"
+          id="signOutBtn"
+          class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50"
         >
           Yes, Sign Out
         </button>
@@ -42,4 +45,59 @@ const baseUrl = import.meta.env.BASE_URL || '/';
       </p>
     </div>
   </div>
+
+  <script>
+    import { signOut, getCurrentUser } from '../lib/auth';
+
+    const signOutBtn = document.getElementById('signOutBtn') as HTMLButtonElement;
+    const messageDiv = document.getElementById('message') as HTMLDivElement;
+
+    function showMessage(message: string, isError: boolean = false) {
+      messageDiv.textContent = message;
+      messageDiv.className = `mb-4 p-4 rounded-lg ${
+        isError ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-green-50 text-green-700 border border-green-200'
+      }`;
+      messageDiv.classList.remove('hidden');
+    }
+
+    // Check if user is signed in
+    async function checkAuth() {
+      const user = await getCurrentUser();
+      if (!user) {
+        // User is not signed in, redirect to home
+        showMessage('You are not signed in.', true);
+        setTimeout(() => {
+          window.location.href = `${import.meta.env.BASE_URL}/`;
+        }, 1500);
+      }
+    }
+
+    checkAuth();
+
+    signOutBtn.addEventListener('click', async () => {
+      signOutBtn.disabled = true;
+      signOutBtn.textContent = 'Signing out...';
+
+      try {
+        const { error } = await signOut();
+
+        if (error) {
+          showMessage(error, true);
+          signOutBtn.disabled = false;
+          signOutBtn.textContent = 'Yes, Sign Out';
+          return;
+        }
+
+        showMessage('Successfully signed out! Redirecting...');
+
+        setTimeout(() => {
+          window.location.href = `${import.meta.env.BASE_URL}/`;
+        }, 1000);
+      } catch (err) {
+        showMessage('An error occurred while signing out', true);
+        signOutBtn.disabled = false;
+        signOutBtn.textContent = 'Yes, Sign Out';
+      }
+    });
+  </script>
 </BaseLayout>

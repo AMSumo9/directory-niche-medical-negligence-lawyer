@@ -9,13 +9,21 @@ const baseUrl = import.meta.env.BASE_URL || '/';
   description="Manage your medical negligence lawyers directory listings and settings."
 >
   <div class="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-12">
-    <div class="container mx-auto px-4 max-w-6xl">
+    <div class="container mx-auto px-4 max-w-7xl">
       <h1 class="text-4xl md:text-5xl font-bold mb-4">Admin Dashboard</h1>
       <p class="text-xl text-blue-100">Manage your directory listings and settings</p>
     </div>
   </div>
 
-  <div class="container mx-auto px-4 max-w-6xl py-12">
+  <!-- Loading State -->
+  <div id="loadingState" class="container mx-auto px-4 max-w-7xl py-12 text-center">
+    <div class="animate-pulse">
+      <div class="text-gray-600">Loading dashboard...</div>
+    </div>
+  </div>
+
+  <!-- Main Dashboard (Hidden initially) -->
+  <div id="dashboard" class="container mx-auto px-4 max-w-7xl py-12 hidden">
     <!-- Quick Stats -->
     <section class="mb-12">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -23,7 +31,7 @@ const baseUrl = import.meta.env.BASE_URL || '/';
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm text-gray-600 mb-1">Total Lawyers</p>
-              <p class="text-3xl font-bold text-gray-900">0</p>
+              <p id="statTotal" class="text-3xl font-bold text-gray-900">0</p>
             </div>
             <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
               <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -37,7 +45,7 @@ const baseUrl = import.meta.env.BASE_URL || '/';
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm text-gray-600 mb-1">Published</p>
-              <p class="text-3xl font-bold text-green-600">0</p>
+              <p id="statPublished" class="text-3xl font-bold text-green-600">0</p>
             </div>
             <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
               <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -50,12 +58,12 @@ const baseUrl = import.meta.env.BASE_URL || '/';
         <div class="bg-white rounded-lg shadow-md p-6">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm text-gray-600 mb-1">Pending Review</p>
-              <p class="text-3xl font-bold text-yellow-600">0</p>
+              <p class="text-sm text-gray-600 mb-1">Featured</p>
+              <p id="statFeatured" class="text-3xl font-bold text-yellow-600">0</p>
             </div>
             <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-              <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg class="w-6 h-6 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
               </svg>
             </div>
           </div>
@@ -64,12 +72,12 @@ const baseUrl = import.meta.env.BASE_URL || '/';
         <div class="bg-white rounded-lg shadow-md p-6">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm text-gray-600 mb-1">Match Requests</p>
-              <p class="text-3xl font-bold text-purple-600">0</p>
+              <p class="text-sm text-gray-600 mb-1">Premium Tier</p>
+              <p id="statPremium" class="text-3xl font-bold text-purple-600">0</p>
             </div>
             <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
               <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
               </svg>
             </div>
           </div>
@@ -77,96 +85,253 @@ const baseUrl = import.meta.env.BASE_URL || '/';
       </div>
     </section>
 
-    <!-- Main Admin Sections -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <!-- Manage Listings -->
-      <section class="lg:col-span-2">
-        <div class="bg-white rounded-lg shadow-md">
-          <div class="p-6 border-b border-gray-200">
-            <h2 class="text-2xl font-bold text-gray-900">Manage Listings</h2>
-          </div>
-          <div class="p-6">
-            <div class="text-center py-12">
-              <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              <p class="text-gray-600 mb-4">No listings to display</p>
-              <a
-                href={`${baseUrl}/add-practice/`}
-                class="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-              >
-                Add First Listing
-              </a>
-            </div>
-          </div>
+    <!-- Manage Listings -->
+    <section>
+      <div class="bg-white rounded-lg shadow-md">
+        <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+          <h2 class="text-2xl font-bold text-gray-900">Manage Listings</h2>
+          <button
+            id="refreshBtn"
+            class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors text-sm"
+          >
+            Refresh
+          </button>
         </div>
-      </section>
-
-      <!-- Quick Actions -->
-      <aside>
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <h3 class="text-xl font-bold text-gray-900 mb-4">Quick Actions</h3>
-          <div class="space-y-3">
-            <a
-              href={`${baseUrl}/add-practice/`}
-              class="block w-full bg-blue-600 text-white text-center px-4 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-            >
-              Add New Listing
-            </a>
-            <button
-              type="button"
-              class="block w-full bg-gray-100 text-gray-700 text-center px-4 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
-            >
-              View Match Requests
-            </button>
-            <button
-              type="button"
-              class="block w-full bg-gray-100 text-gray-700 text-center px-4 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
-            >
-              Analytics
-            </button>
-            <button
-              type="button"
-              class="block w-full bg-gray-100 text-gray-700 text-center px-4 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
-            >
-              Settings
-            </button>
-          </div>
-        </div>
-
-        <!-- Recent Activity -->
-        <div class="bg-white rounded-lg shadow-md p-6 mt-6">
-          <h3 class="text-xl font-bold text-gray-900 mb-4">Recent Activity</h3>
-          <div class="text-center py-8">
-            <p class="text-gray-500 text-sm">No recent activity</p>
-          </div>
-        </div>
-      </aside>
-    </div>
-
-    <!-- Access Control Notice -->
-    <div class="mt-8 bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded">
-      <div class="flex">
-        <div class="flex-shrink-0">
-          <svg class="h-6 w-6 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-          </svg>
-        </div>
-        <div class="ml-3">
-          <h3 class="text-sm font-medium text-yellow-800">Admin Access Required</h3>
-          <div class="mt-2 text-sm text-yellow-700">
-            <p>This is a protected admin area. In a production environment, you would need to sign in with admin credentials to access these features.</p>
-          </div>
-          <div class="mt-4">
-            <a
-              href={`${baseUrl}/sign-in/`}
-              class="text-sm font-medium text-yellow-800 hover:text-yellow-900 underline"
-            >
-              Go to Sign In →
-            </a>
-          </div>
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead class="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Firm Name</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tier</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Featured</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="lawyersTable" class="bg-white divide-y divide-gray-200">
+              <!-- Populated by JavaScript -->
+            </tbody>
+          </table>
         </div>
       </div>
-    </div>
+    </section>
   </div>
+
+  <script>
+    import { getCurrentUser } from '../lib/auth';
+    import { supabase } from '../lib/supabase';
+    import type { Lawyer } from '../lib/types';
+
+    const loadingState = document.getElementById('loadingState')!;
+    const dashboard = document.getElementById('dashboard')!;
+    const lawyersTable = document.getElementById('lawyersTable')!;
+    const refreshBtn = document.getElementById('refreshBtn')!;
+
+    // Stats elements
+    const statTotal = document.getElementById('statTotal')!;
+    const statPublished = document.getElementById('statPublished')!;
+    const statFeatured = document.getElementById('statFeatured')!;
+    const statPremium = document.getElementById('statPremium')!;
+
+    let lawyers: Lawyer[] = [];
+
+    // Check authentication
+    async function checkAuth() {
+      const user = await getCurrentUser();
+
+      if (!user) {
+        // Redirect to sign-in if not authenticated
+        window.location.href = `${import.meta.env.BASE_URL}/sign-in/`;
+        return false;
+      }
+
+      return true;
+    }
+
+    // Fetch lawyers
+    async function fetchLawyers() {
+      const { data, error } = await supabase
+        .from('lawyers')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching lawyers:', error);
+        alert('Failed to load lawyers. Please try again.');
+        return;
+      }
+
+      lawyers = data || [];
+      updateStats();
+      renderTable();
+    }
+
+    // Update stats
+    function updateStats() {
+      statTotal.textContent = lawyers.length.toString();
+      statPublished.textContent = lawyers.filter(l => l.is_published).length.toString();
+      statFeatured.textContent = lawyers.filter(l => l.is_featured).length.toString();
+      statPremium.textContent = lawyers.filter(l => l.subscription_tier === 'premium').length.toString();
+    }
+
+    // Render table
+    function renderTable() {
+      if (lawyers.length === 0) {
+        lawyersTable.innerHTML = `
+          <tr>
+            <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+              No lawyers found in the database
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      lawyersTable.innerHTML = lawyers.map(lawyer => `
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-medium text-gray-900">${lawyer.firm_name}</div>
+            <div class="text-sm text-gray-500">${lawyer.slug}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900">${lawyer.city}</div>
+            <div class="text-sm text-gray-500">${lawyer.state_code}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <select
+              class="text-sm rounded px-2 py-1 border border-gray-300 tier-select"
+              data-id="${lawyer.id}"
+              data-field="subscription_tier"
+            >
+              <option value="free" ${lawyer.subscription_tier === 'free' ? 'selected' : ''}>Free</option>
+              <option value="basic" ${lawyer.subscription_tier === 'basic' ? 'selected' : ''}>Basic</option>
+              <option value="premium" ${lawyer.subscription_tier === 'premium' ? 'selected' : ''}>Premium</option>
+              <option value="featured" ${lawyer.subscription_tier === 'featured' ? 'selected' : ''}>Featured</option>
+            </select>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <button
+              class="toggle-btn ${lawyer.is_featured ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'} px-3 py-1 rounded-full text-xs font-medium"
+              data-id="${lawyer.id}"
+              data-field="is_featured"
+              data-value="${lawyer.is_featured}"
+            >
+              ${lawyer.is_featured ? '★ Featured' : '☆ Not Featured'}
+            </button>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <input
+              type="number"
+              class="w-16 text-sm rounded px-2 py-1 border border-gray-300 priority-input"
+              data-id="${lawyer.id}"
+              data-field="featured_priority"
+              value="${lawyer.featured_priority}"
+              min="0"
+              max="100"
+            />
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <button
+              class="toggle-btn ${lawyer.is_published ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'} px-3 py-1 rounded-full text-xs font-medium"
+              data-id="${lawyer.id}"
+              data-field="is_published"
+              data-value="${lawyer.is_published}"
+            >
+              ${lawyer.is_published ? '✓ Published' : '✗ Unpublished'}
+            </button>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm">
+            <a
+              href="${import.meta.env.BASE_URL}/${lawyer.state_code.toLowerCase()}/${lawyer.city.toLowerCase().replace(/\s+/g, '-')}/${lawyer.slug}/"
+              target="_blank"
+              class="text-blue-600 hover:text-blue-800 font-medium"
+            >
+              View →
+            </a>
+          </td>
+        </tr>
+      `).join('');
+
+      attachEventListeners();
+    }
+
+    // Attach event listeners
+    function attachEventListeners() {
+      // Toggle buttons (featured/published)
+      document.querySelectorAll('.toggle-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const target = e.target as HTMLButtonElement;
+          const id = target.dataset.id!;
+          const field = target.dataset.field!;
+          const currentValue = target.dataset.value === 'true';
+
+          await updateLawyer(id, field, !currentValue);
+        });
+      });
+
+      // Tier select
+      document.querySelectorAll('.tier-select').forEach(select => {
+        select.addEventListener('change', async (e) => {
+          const target = e.target as HTMLSelectElement;
+          const id = target.dataset.id!;
+          const field = target.dataset.field!;
+
+          await updateLawyer(id, field, target.value);
+        });
+      });
+
+      // Priority input
+      document.querySelectorAll('.priority-input').forEach(input => {
+        input.addEventListener('blur', async (e) => {
+          const target = e.target as HTMLInputElement;
+          const id = target.dataset.id!;
+          const field = target.dataset.field!;
+          const value = parseInt(target.value);
+
+          if (!isNaN(value)) {
+            await updateLawyer(id, field, value);
+          }
+        });
+      });
+    }
+
+    // Update lawyer
+    async function updateLawyer(id: string, field: string, value: any) {
+      const { error } = await supabase
+        .from('lawyers')
+        .update({ [field]: value })
+        .eq('id', id);
+
+      if (error) {
+        console.error('Error updating lawyer:', error);
+        alert('Failed to update. Please try again.');
+        return;
+      }
+
+      // Refresh data
+      await fetchLawyers();
+    }
+
+    // Initialize
+    async function init() {
+      const isAuthenticated = await checkAuth();
+
+      if (!isAuthenticated) {
+        return;
+      }
+
+      await fetchLawyers();
+
+      loadingState.classList.add('hidden');
+      dashboard.classList.remove('hidden');
+    }
+
+    // Refresh button
+    refreshBtn.addEventListener('click', fetchLawyers);
+
+    // Run init
+    init();
+  </script>
 </BaseLayout>

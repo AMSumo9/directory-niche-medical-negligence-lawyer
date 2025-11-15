@@ -25,13 +25,14 @@ const baseUrl = import.meta.env.BASE_URL || '/';
           <a href={baseUrl} class="text-2xl font-bold hover:text-blue-200 transition-colors mb-2 sm:mb-0">
             MNL Directory
           </a>
-          <div class="flex gap-4 flex-wrap text-sm sm:text-base">
+          <div id="mainNav" class="flex gap-4 flex-wrap text-sm sm:text-base">
             <a href={`${baseUrl}/find-lawyers/`} class="hover:text-blue-200 transition-colors">Find Lawyers</a>
             <a href={`${baseUrl}/resources/`} class="hover:text-blue-200 transition-colors">Resources</a>
             <a href={`${baseUrl}/add-practice/`} class="hover:text-blue-200 transition-colors">Add Your Practice</a>
             <a href={`${baseUrl}/get-matched/`} class="hover:text-blue-200 transition-colors">Get Matched</a>
-            <a href={`${baseUrl}/admin/`} class="hover:text-blue-200 transition-colors">Admin</a>
-            <a href={`${baseUrl}/sign-out/`} class="hover:text-blue-200 transition-colors">Sign Out</a>
+            <a href={`${baseUrl}/admin/`} id="adminLink" class="hover:text-blue-200 transition-colors hidden">Admin</a>
+            <a href={`${baseUrl}/sign-in/`} id="signInLink" class="hover:text-blue-200 transition-colors">Sign In</a>
+            <a href={`${baseUrl}/sign-out/`} id="signOutLink" class="hover:text-blue-200 transition-colors hidden">Sign Out</a>
           </div>
         </nav>
         <p class="text-blue-100 text-sm mt-2">Connecting clients with experienced medical negligence lawyers across Australia.</p>
@@ -75,5 +76,38 @@ const baseUrl = import.meta.env.BASE_URL || '/';
         </div>
       </div>
     </footer>
+
+    <script>
+      import { getCurrentUser } from '../lib/auth';
+
+      // Update navigation based on auth state
+      async function updateNav() {
+        const user = await getCurrentUser();
+        const signInLink = document.getElementById('signInLink');
+        const signOutLink = document.getElementById('signOutLink');
+        const adminLink = document.getElementById('adminLink');
+
+        if (user) {
+          // User is signed in
+          signInLink?.classList.add('hidden');
+          signOutLink?.classList.remove('hidden');
+          adminLink?.classList.remove('hidden');
+        } else {
+          // User is not signed in
+          signInLink?.classList.remove('hidden');
+          signOutLink?.classList.add('hidden');
+          adminLink?.classList.add('hidden');
+        }
+      }
+
+      // Run on page load
+      updateNav();
+
+      // Listen for auth state changes
+      import { supabase } from '../lib/supabase';
+      supabase.auth.onAuthStateChange((event, session) => {
+        updateNav();
+      });
+    </script>
   </body>
 </html>
