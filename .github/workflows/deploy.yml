@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, claude/consolidated-main-01T5K58DveBKuBHaVmTNZsf3]
   workflow_dispatch:
 
 permissions:
@@ -34,6 +34,7 @@ jobs:
         env:
           PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
           PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}
+          DEPLOY_TARGET: github
         run: npm run build
 
       - name: Upload artifact
