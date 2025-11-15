@@ -1,4 +1,4 @@
-﻿---
+---
 interface Props {
   title: string;
   description: string;
@@ -20,17 +20,21 @@ const baseUrl = import.meta.env.BASE_URL || '/';
   </head>
   <body class="min-h-screen bg-gray-50 flex flex-col">
     <header class="bg-blue-900 text-white shadow-lg">
-      <div class="container mx-auto px-4 py-6">
-        <nav class="flex items-center justify-between">
-          <a href={baseUrl} class="text-2xl font-bold hover:text-blue-200 transition-colors">
-            Medical Negligence Lawyers
+      <div class="container mx-auto px-4 py-4">
+        <nav class="flex items-center justify-between flex-wrap">
+          <a href={baseUrl} class="text-2xl font-bold hover:text-blue-200 transition-colors mb-2 sm:mb-0">
+            MNL Directory
           </a>
-          <div class="flex gap-6">
-            <a href={baseUrl} class="hover:text-blue-200 transition-colors">Home</a>
-            <a href={`${baseUrl}about`} class="hover:text-blue-200 transition-colors">About</a>
-            <a href={`${baseUrl}contact`} class="hover:text-blue-200 transition-colors">Contact</a>
+          <div class="flex gap-4 flex-wrap text-sm sm:text-base">
+            <a href={`${baseUrl}/find-lawyers/`} class="hover:text-blue-200 transition-colors">Find Lawyers</a>
+            <a href={`${baseUrl}/resources/`} class="hover:text-blue-200 transition-colors">Resources</a>
+            <a href={`${baseUrl}/add-practice/`} class="hover:text-blue-200 transition-colors">Add Your Practice</a>
+            <a href={`${baseUrl}/get-matched/`} class="hover:text-blue-200 transition-colors">Get Matched</a>
+            <a href={`${baseUrl}/admin/`} class="hover:text-blue-200 transition-colors">Admin</a>
+            <a href={`${baseUrl}/sign-out/`} class="hover:text-blue-200 transition-colors">Sign Out</a>
           </div>
         </nav>
+        <p class="text-blue-100 text-sm mt-2">Connecting clients with experienced medical negligence lawyers across Australia.</p>
       </div>
     </header>
 
@@ -42,25 +46,27 @@ const baseUrl = import.meta.env.BASE_URL || '/';
       <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 class="text-xl font-bold mb-4">Medical Negligence Lawyers</h3>
+            <h3 class="text-xl font-bold mb-4">MNL Directory</h3>
             <p class="text-gray-300">
-              Find experienced medical negligence lawyers across Australia.
-              Connect with qualified professionals to help with your case.
+              Connecting clients with experienced medical negligence lawyers across Australia.
             </p>
           </div>
           <div>
             <h3 class="text-xl font-bold mb-4">Quick Links</h3>
             <ul class="space-y-2">
-              <li><a href={baseUrl} class="text-gray-300 hover:text-white transition-colors">Home</a></li>
-              <li><a href={`${baseUrl}about`} class="text-gray-300 hover:text-white transition-colors">About</a></li>
-              <li><a href={`${baseUrl}contact`} class="text-gray-300 hover:text-white transition-colors">Contact</a></li>
+              <li><a href={`${baseUrl}/find-lawyers/`} class="text-gray-300 hover:text-white transition-colors">Find Lawyers</a></li>
+              <li><a href={`${baseUrl}/add-practice/`} class="text-gray-300 hover:text-white transition-colors">Add Your Practice</a></li>
+              <li><a href={`${baseUrl}/get-matched/`} class="text-gray-300 hover:text-white transition-colors">Get Matched</a></li>
+              <li><a href={`${baseUrl}/sign-in/`} class="text-gray-300 hover:text-white transition-colors">Sign In</a></li>
             </ul>
           </div>
           <div>
             <h3 class="text-xl font-bold mb-4">Legal</h3>
             <ul class="space-y-2">
-              <li><a href={`${baseUrl}privacy`} class="text-gray-300 hover:text-white transition-colors">Privacy Policy</a></li>
-              <li><a href={`${baseUrl}terms`} class="text-gray-300 hover:text-white transition-colors">Terms of Service</a></li>
+              <li><a href={`${baseUrl}/privacy/`} class="text-gray-300 hover:text-white transition-colors">Privacy Policy</a></li>
+              <li><a href={`${baseUrl}/terms/`} class="text-gray-300 hover:text-white transition-colors">Terms of Service</a></li>
+              <li><a href={`${baseUrl}/disclaimer/`} class="text-gray-300 hover:text-white transition-colors">Disclaimer</a></li>
+              <li><a href={`${baseUrl}/contact/`} class="text-gray-300 hover:text-white transition-colors">Contact</a></li>
             </ul>
           </div>
         </div>
