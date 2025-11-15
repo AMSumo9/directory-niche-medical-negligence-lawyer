@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const baseUrl = import.meta.env.BASE_URL || '/';
+---
+
+<BaseLayout
+  title="Sign Out - MNL Directory"
+  description="Sign out of your MNL Directory account."
+>
+  <div class="container mx-auto px-4 max-w-md py-24">
+    <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+      <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+        </svg>
+      </div>
+
+      <h1 class="text-3xl font-bold text-gray-900 mb-4">Sign Out</h1>
+      <p class="text-gray-600 mb-8">Are you sure you want to sign out of your account?</p>
+
+      <div class="space-y-3">
+        <button
+          type="button"
+          class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+          onclick="window.location.href = '${baseUrl}'"
+        >
+          Yes, Sign Out
+        </button>
+
+        <button
+          type="button"
+          class="w-full bg-gray-200 text-gray-700 py-3 px-6 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
+          onclick="window.history.back()"
+        >
+          Cancel
+        </button>
+      </div>
+
+      <p class="text-sm text-gray-500 mt-6">
+        You can sign back in anytime at <a href={`${baseUrl}/sign-in/`} class="text-blue-600 hover:text-blue-800">sign-in</a>
+      </p>
+    </div>
+  </div>
+</BaseLayout>

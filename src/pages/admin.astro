@@ -1,0 +1,172 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const baseUrl = import.meta.env.BASE_URL || '/';
+---
+
+<BaseLayout
+  title="Admin Dashboard - MNL Directory"
+  description="Manage your medical negligence lawyers directory listings and settings."
+>
+  <div class="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-12">
+    <div class="container mx-auto px-4 max-w-6xl">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">Admin Dashboard</h1>
+      <p class="text-xl text-blue-100">Manage your directory listings and settings</p>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-4 max-w-6xl py-12">
+    <!-- Quick Stats -->
+    <section class="mb-12">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-600 mb-1">Total Lawyers</p>
+              <p class="text-3xl font-bold text-gray-900">0</p>
+            </div>
+            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-600 mb-1">Published</p>
+              <p class="text-3xl font-bold text-green-600">0</p>
+            </div>
+            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-600 mb-1">Pending Review</p>
+              <p class="text-3xl font-bold text-yellow-600">0</p>
+            </div>
+            <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-600 mb-1">Match Requests</p>
+              <p class="text-3xl font-bold text-purple-600">0</p>
+            </div>
+            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Admin Sections -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Manage Listings -->
+      <section class="lg:col-span-2">
+        <div class="bg-white rounded-lg shadow-md">
+          <div class="p-6 border-b border-gray-200">
+            <h2 class="text-2xl font-bold text-gray-900">Manage Listings</h2>
+          </div>
+          <div class="p-6">
+            <div class="text-center py-12">
+              <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <p class="text-gray-600 mb-4">No listings to display</p>
+              <a
+                href={`${baseUrl}/add-practice/`}
+                class="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+              >
+                Add First Listing
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quick Actions -->
+      <aside>
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <h3 class="text-xl font-bold text-gray-900 mb-4">Quick Actions</h3>
+          <div class="space-y-3">
+            <a
+              href={`${baseUrl}/add-practice/`}
+              class="block w-full bg-blue-600 text-white text-center px-4 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+            >
+              Add New Listing
+            </a>
+            <button
+              type="button"
+              class="block w-full bg-gray-100 text-gray-700 text-center px-4 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
+            >
+              View Match Requests
+            </button>
+            <button
+              type="button"
+              class="block w-full bg-gray-100 text-gray-700 text-center px-4 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
+            >
+              Analytics
+            </button>
+            <button
+              type="button"
+              class="block w-full bg-gray-100 text-gray-700 text-center px-4 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
+            >
+              Settings
+            </button>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="bg-white rounded-lg shadow-md p-6 mt-6">
+          <h3 class="text-xl font-bold text-gray-900 mb-4">Recent Activity</h3>
+          <div class="text-center py-8">
+            <p class="text-gray-500 text-sm">No recent activity</p>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Access Control Notice -->
+    <div class="mt-8 bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-6 w-6 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-yellow-800">Admin Access Required</h3>
+          <div class="mt-2 text-sm text-yellow-700">
+            <p>This is a protected admin area. In a production environment, you would need to sign in with admin credentials to access these features.</p>
+          </div>
+          <div class="mt-4">
+            <a
+              href={`${baseUrl}/sign-in/`}
+              class="text-sm font-medium text-yellow-800 hover:text-yellow-900 underline"
+            >
+              Go to Sign In →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

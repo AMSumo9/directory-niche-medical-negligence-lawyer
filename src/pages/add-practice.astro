@@ -1,0 +1,233 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const baseUrl = import.meta.env.BASE_URL || '/';
+---
+
+<BaseLayout
+  title="Add Your Practice - MNL Directory"
+  description="List your medical negligence law practice on MNL Directory and connect with potential clients across Australia."
+>
+  <div class="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-12">
+    <div class="container mx-auto px-4 max-w-6xl">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">Add Your Practice</h1>
+      <p class="text-xl text-blue-100">Join Australia's leading medical negligence lawyer directory</p>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-4 max-w-4xl py-12">
+    <!-- Benefits Section -->
+    <section class="mb-12">
+      <h2 class="text-3xl font-bold text-gray-900 mb-6">Why List Your Practice?</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Increased Visibility</h3>
+          <p class="text-gray-700">Reach potential clients actively searching for medical negligence lawyers in your area.</p>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Quality Leads</h3>
+          <p class="text-gray-700">Connect with clients who are specifically looking for medical negligence expertise.</p>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Build Credibility</h3>
+          <p class="text-gray-700">Showcase your expertise, experience, and successful case outcomes.</p>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Grow Your Practice</h3>
+          <p class="text-gray-700">Expand your client base and grow your medical negligence practice.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Form Section -->
+    <section class="mb-12">
+      <h2 class="text-3xl font-bold text-gray-900 mb-6">Get Started Today</h2>
+      <div class="bg-white rounded-lg shadow-lg p-8">
+        <form class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="firm-name" class="block text-sm font-medium text-gray-700 mb-2">Law Firm Name *</label>
+              <input
+                type="text"
+                id="firm-name"
+                name="firm-name"
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Enter your firm name"
+              />
+            </div>
+
+            <div>
+              <label for="contact-name" class="block text-sm font-medium text-gray-700 mb-2">Contact Person *</label>
+              <input
+                type="text"
+                id="contact-name"
+                name="contact-name"
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Your name"
+              />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="your@email.com"
+              />
+            </div>
+
+            <div>
+              <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="(02) 1234 5678"
+              />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="city" class="block text-sm font-medium text-gray-700 mb-2">City *</label>
+              <input
+                type="text"
+                id="city"
+                name="city"
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Sydney"
+              />
+            </div>
+
+            <div>
+              <label for="state" class="block text-sm font-medium text-gray-700 mb-2">State *</label>
+              <select
+                id="state"
+                name="state"
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">Select a state</option>
+                <option value="NSW">New South Wales</option>
+                <option value="VIC">Victoria</option>
+                <option value="QLD">Queensland</option>
+                <option value="WA">Western Australia</option>
+                <option value="SA">South Australia</option>
+                <option value="TAS">Tasmania</option>
+                <option value="ACT">Australian Capital Territory</option>
+                <option value="NT">Northern Territory</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label for="website" class="block text-sm font-medium text-gray-700 mb-2">Website</label>
+            <input
+              type="url"
+              id="website"
+              name="website"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="https://yourfirm.com.au"
+            />
+          </div>
+
+          <div>
+            <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Additional Information</label>
+            <textarea
+              id="message"
+              name="message"
+              rows="4"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Tell us about your practice, areas of expertise, years of experience, etc."
+            ></textarea>
+          </div>
+
+          <div class="flex items-start">
+            <input
+              type="checkbox"
+              id="terms"
+              name="terms"
+              required
+              class="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+            <label for="terms" class="ml-2 text-sm text-gray-700">
+              I agree to the <a href={`${baseUrl}/terms/`} class="text-blue-600 hover:text-blue-800">Terms of Service</a> and
+              <a href={`${baseUrl}/privacy/`} class="text-blue-600 hover:text-blue-800"> Privacy Policy</a>
+            </label>
+          </div>
+
+          <button
+            type="submit"
+            class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-lg"
+          >
+            Submit Application
+          </button>
+        </form>
+
+        <p class="text-sm text-gray-600 mt-6 text-center">
+          * Required fields. We'll review your application and contact you within 2-3 business days.
+        </p>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section>
+      <h2 class="text-3xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
+      <div class="bg-white rounded-lg shadow-md divide-y divide-gray-200">
+        <div class="p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">How much does it cost to list my practice?</h3>
+          <p class="text-gray-700">Contact us for current pricing information and package options tailored to your needs.</p>
+        </div>
+
+        <div class="p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">How long does the approval process take?</h3>
+          <p class="text-gray-700">We typically review applications within 2-3 business days and will contact you with next steps.</p>
+        </div>
+
+        <div class="p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Can I update my listing after it's published?</h3>
+          <p class="text-gray-700">Yes, you'll have access to a dashboard where you can update your practice information at any time.</p>
+        </div>
+
+        <div class="p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">What information will be displayed on my listing?</h3>
+          <p class="text-gray-700">Your listing will include your firm name, location, contact details, practice areas, bio, and any additional information you provide.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
